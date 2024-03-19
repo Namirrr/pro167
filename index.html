@@ -2,71 +2,97 @@
 <html>
 
 <head>
-  <title>Menu Card</title>
-  <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+  <title>Image Tracking AR</title>
 
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <!-- iOS has a lot of restrictions on playing videos in the browser. 
+  To play an inline video texture, we must set the meta tag. 
+  A-Frame will inject this if missing.-->
+  
+  <meta name = "apple-mobile-web-app-capable" content = "yes"/>
+  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
+
+  <!-- import aframe and then ar.js with image tracking / location based features -->
   <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
-  <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-  <script src="https://cdn.jsdelivr.net/gh/donmccurdy/aframe-extras@v6.1.1/dist/aframe-extras.min.js"></script>
-  <script src="https://raw.githack.com/fcor/arjs-gestures/master/dist/gestures.js"></script>
+  
+  <script src="./play-on-click.js"></script>
 
-  <!-- Bootstrap -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-
-  <!-- Local StyleSheet -->
-  <link href="./style.css" rel="stylesheet" />
-
-  <!--JS Files-->
-  <script src="./js/addButtons.js"></script>
+  
+  <!-- style for the loader -->
+  <style>
+    .arjs-loader{
+      height:100%;
+      width:100%;
+      position: absolute;
+      top: 0;
+      left:0;
+      background-color: black;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .arjs-loader div{
+      text-align: center;
+      font-size: 1.25em;
+      color: white;
+    }
+  </style>
 
 </head>
 
 <body style="margin : 0px; overflow: hidden;">
 
-  <a-scene vr-mode-ui="enabled: false" embedded arjs="sourceType: webcam; 
-    sourceWidth:1280; sourceHeight:960; 
-    displayWidth: 1280; displayHeight: 960; 
-    debugUIEnabled: false;" gesture-detector create-buttons>
+  <!-- minimal loader shown until image descriptors are loaded. 
+    Loading may take a while according to the device computational power -->
+  <div class = "arjs-loader">
+    <div>Loading</div>
+  </div>
+  
 
-    <!-- Camera -->
-    <a-entity camera></a-entity>
+  <!-- a-frame scene -->
+  <a-scene 
+    vr-mode-ui = "enabled: false"
+    renderer = "logarithmicDepthBuffer: true"
+    embedded
+    arjs = "trackingMethod: best; sourceType: webcam; debugUIEnabled: false"
 
-    <a-assets>
-      <a-asset-item id="pizza-model" src="./assets/pizza/scene.gltf"></a-asset-item>
-    </a-assets>
+>
+<a-entity id="camera" camera position="0 0 10"></a-entity>
+<a-assets >
 
-    <!--Pattern Marker-->
-    <a-marker id="pizza-marker" type="pattern" url="assets/dish-markers/pattern-pizza.patt" cursor="rayOrigin: mouse">
-      
-      <a-entity id="pizza-3D-model" position="-1 0 0" scale="0.05 0.05 0.05" 
-        gltf-model="#pizza-model"
-        gesture-handler>
-      </a-entity>
+<video id="video1"
+src="./assets/videos/Rocket_Launching_Animation.mp4"
+preload = "auto"
+loop="true"
+playsinline
+webkit-playsinline
+autoplay
+crossorigin="anonymous"
+></video>
 
-
-      <!-- Ingredients -->
-      <a-plane position="0 0 0" width="1.5" height="1.5" rotation="-90 0 0">
-        <a-plane position="0 0.89 0.02" width="1.49" height="0.3" rotation="0 0 0" color="#F0C30F">
-          <a-entity position="0 0 0.1" rotation="0 0 0"
-          text="font: monoid; value: PIZZA MAGHERITTA; color: black; width: 1; height: 1; align: center;"
-          ></a-entity>
-        </a-plane>
-
-
-        <a-entity position="0 0 0.1" rotation="0 0 0"
-          text="color: black; align: center; width: 2; font: monoid;
-               value: Tomato sauce\n\nMozzarella cheese\n\nParmesan cheese (optional)\n\nFresh Basil\n\nOlive oil\n\nBlack pepper (optional)">
-        </a-entity>
-      </a-plane>
-
-    </a-marker>
+</a-assets>
 
 
-  </a-scene>
-
-  <!-- Button Main Div -->
-  <div id="button-div"></div>
+<a-nft id = "nft1"
+type="nft"
+url="./assets/image-marker/rocket_img"
+smooth="true"
+smoothCount="10"
+smoothTolerance="0.01"
+smoothThreshold="5"
+></a-nft>
+<a-video id="vid1"
+src="#video1"
+width="600"
+height="509"
+position="0 0 -30"
+rotation="-90 0 0"
+play-on-click
+></a-video>
+</a-scene>
 
 </body>
 
